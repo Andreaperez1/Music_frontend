@@ -24,27 +24,17 @@
       </v-card>
 
       <v-footer class="card" padless>
-
-        <v-tooltip
-         class="custom-tooltip" 
-         location="top"
-         v-for="icon in icons" 
-         :key="icon">
+        <v-tooltip class="custom-tooltip" location="top" v-for="icon in icons" :key="icon.name">
           <template v-slot:activator="{ props }">
-            <v-btn class="mx-10 icono" icon v-bind="props">
-              <v-icon size="24px" color="#9C75D1">
+            <v-btn class="mx-8 icono" icon v-bind="props" @click="navigate(icon.route)">
+              <v-icon size="23px" color="#9C75D1">
                 {{ icon.icon }}
               </v-icon>
             </v-btn>
           </template>
-
           <span>{{ icon.name }}</span>
-
         </v-tooltip>
-
-
       </v-footer>
-
     </v-card>
   </v-app>
 </template>
@@ -55,26 +45,19 @@ export default {
     return {
       loaded: false,
       loading: false,
-      activeSlide: 1, // Índice de la diapositiva activa
+      activeSlide: 1,
       items: [
         { src: 'adele.jpg', alt: 'Imagen 1' },
         { src: 'rihana.jpg', alt: 'Imagen 2' },
-        // Agrega más objetos según sea necesario
       ],
       icons: [
-        { icon: 'mdi-view-dashboard', name: 'Crear Categoria' },
-        { icon: 'mdi-harddisk', name: 'Crear Genero' },
-
-        { icon: 'mdi-account', name: 'Crear Autor' },
-        { icon: 'mdi-package-up', name: 'Crear Cancion' },
-
-
-
+      { icon: 'mdi-playlist-plus', name: 'Crear Playlist', route: '/crear-playlist' },
+      { icon: 'mdi-harddisk', name: 'Crear Genero', route: '/crear-genero' },
+      { icon: 'mdi-account', name: 'Crear Autor', route: '/crear-autor' },
+      { icon: 'mdi-package-up', name: 'Crear Cancion', route: '/crear-cancion' },
       ],
-
     };
   },
-
   methods: {
     onClick() {
       this.loading = true;
@@ -82,8 +65,11 @@ export default {
         this.loading = false;
         this.loaded = true;
       }, 2000);
-    }
-  }
+    },
+    navigate(route) {
+      this.$router.push(route);
+    },
+  },
 };
 </script>
 
@@ -92,16 +78,13 @@ export default {
   margin-top: 20px;
   background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(137, 41, 184, 1) 100%);
 }
-
 .bar {
   height: 10px;
   background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(137, 41, 184, 1) 100%);
 }
-
 .card2 {
   margin-top: 20px;
 }
-
 .ti {
   @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda+SC:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
   text-align: center;
@@ -110,9 +93,7 @@ export default {
   font-optical-sizing: auto;
   color: aliceblue;
   font-weight: bold;
-  /* Añade esta línea para negrilla */
 }
-
 .color {
   background-color: #B45BC8;
   height: 100%;
@@ -120,7 +101,6 @@ export default {
   position: relative;
   padding: 10px;
 }
-
 .custom-tooltip .v-tooltip__content {
   background-color: rgb(62, 223, 196) !important;
 }
