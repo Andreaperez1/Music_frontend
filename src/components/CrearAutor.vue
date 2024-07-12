@@ -9,12 +9,12 @@
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         <v-card-text>
-          <v-text-field :loading="loading" append-inner-icon="mdi-magnify" density="compact"
-            label="Buscar " variant="solo" hide-details single-line @click:append-inner="onClick"></v-text-field>
+          <v-text-field :loading="loading" append-inner-icon="mdi-magnify" density="compact" label="Buscar "
+            variant="solo" hide-details single-line @click:append-inner="onClick"></v-text-field>
         </v-card-text>
       </v-toolbar>
 
-      <v-container class="mt-12"> 
+      <v-container class="mt-12">
         <v-row>
           <v-col cols="12">
             <v-form @submit.prevent="submitForm">
@@ -26,18 +26,7 @@
         </v-row>
       </v-container>
 
-      <v-footer class="card" padless>
-        <v-tooltip class="custom-tooltip" location="top" v-for="icon in icons" :key="icon.name">
-          <template v-slot:activator="{ props }">
-            <v-btn class="mx-8 icono" icon v-bind="props" @click="goToView(icon.route)">
-              <v-icon size="24px" color="#9C75D1">
-                {{ icon.icon }}
-              </v-icon>
-            </v-btn>
-          </template>
-          <span>{{ icon.name }}</span>
-        </v-tooltip>
-      </v-footer>
+      <NavMenu />
     </v-card>
   </v-app>
 </template>
@@ -50,12 +39,7 @@ export default {
       nombre: '',
       pais: '',
       loading: false,
-      icons: [
-        { icon: 'mdi-playlist-plus', name: 'Crear Playlist', route: '/crear-playlist' },
-        { icon: 'mdi-harddisk', name: 'Crear Genero', route: '/crear-genero' },
-        { icon: 'mdi-account', name: 'Crear Autor', route: '/crear-autor' },
-        { icon: 'mdi-package-up', name: 'Crear Cancion', route: '/crear-cancion' },
-      ],
+
     };
   },
   methods: {
@@ -68,7 +52,7 @@ export default {
       // Aquí iría la lógica para enviar el formulario a un backend o similar
     },
     goBack() {
-      this.$router.back(); 
+      this.$router.back();
     },
     onClick() {
       this.loading = true;
@@ -103,7 +87,8 @@ export default {
   font-optical-sizing: auto;
   color: aliceblue;
   font-weight: bold;
-  margin-top: 30px; /* Ajuste para centrar verticalmente el título */
+  margin-top: 30px;
+  /* Ajuste para centrar verticalmente el título */
 }
 
 .custom-tooltip .v-tooltip__content {

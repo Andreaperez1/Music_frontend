@@ -9,13 +9,12 @@
                     <v-icon>mdi-arrow-left</v-icon>
                 </v-btn>
                 <v-card-text>
-                    <v-text-field :loading="loading" append-inner-icon="mdi-magnify" density="compact"
-                        label="Buscar" variant="solo" hide-details single-line
-                        @click:append-inner="onClick"></v-text-field>
+                    <v-text-field :loading="loading" append-inner-icon="mdi-magnify" density="compact" label="Buscar"
+                        variant="solo" hide-details single-line @click:append-inner="onClick"></v-text-field>
                 </v-card-text>
             </v-toolbar>
-            
-            <v-container class="mt-12"> 
+
+            <v-container class="mt-12">
                 <v-row>
                     <v-col>
                         <v-form @submit.prevent="submitForm">
@@ -27,25 +26,14 @@
                                 required></v-text-field>
                             <v-select v-model="genero" :items="generos" label="Género" required></v-select>
                             <v-text-field v-model="anio" label="Año de la canción" type="number"
-                            required></v-text-field>
+                                required></v-text-field>
                             <v-btn type="submit" color="primary" class="mx-auto d-block">Guardar</v-btn>
                         </v-form>
                     </v-col>
                 </v-row>
             </v-container>
 
-            <v-footer class="card" padless>
-                <v-tooltip class="custom-tooltip" location="top" v-for="icon in icons" :key="icon.name">
-                    <template v-slot:activator="{ props }">
-            <v-btn class="mx-8 icono" icon v-bind="props" @click="goToView(icon.route)">
-                            <v-icon size="24px" color="#9C75D1">
-                                {{ icon.icon }}
-                            </v-icon>
-                        </v-btn>
-                    </template>
-                    <span>{{ icon.name }}</span>
-                </v-tooltip>
-            </v-footer>
+            <NavMenu />
         </v-card>
     </v-app>
 </template>
@@ -65,16 +53,11 @@ export default {
             genero: '',
             generos: [], // Lista de géneros traída de CrearGenero.vue
             loading: false,
-            icons: [
-            { icon: 'mdi-playlist-plus', name: 'Crear Playlist', route: '/crear-playlist' },
-            { icon: 'mdi-harddisk', name: 'Crear Genero' },
-                { icon: 'mdi-account', name: 'Crear Autor' },
-                { icon: 'mdi-package-up', name: 'Crear Cancion' },
-            ],
+
         };
     },
     methods:
-     {
+    {
         fetchAutores() {
             this.autores = ['John Doe', 'Jane Smith', 'Mark Johnson', 'Anna Lee'];
         },
@@ -89,11 +72,11 @@ export default {
             }
         },
         goBack() {
-    this.$router.back();
-  },
-  goToView(route) {
-      this.$router.push(route); // Navega a la ruta especificada usando Vue Router
-    },
+            this.$router.back();
+        },
+        goToView(route) {
+            this.$router.push(route); // Navega a la ruta especificada usando Vue Router
+        },
         onClick() {
             this.loading = true;
             setTimeout(() => {
@@ -111,7 +94,7 @@ export default {
             console.log('Formulario enviado:', data);
             // Aquí iría la lógica para enviar el formulario a un backend o similar
         },
-       
+
     },
     created() {
         this.fetchAutores();

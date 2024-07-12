@@ -24,19 +24,7 @@
           </v-col>
         </v-row>
       </v-container>
-
-      <v-footer class="card" padless>
-        <v-tooltip class="custom-tooltip" location="top" v-for="icon in icons" :key="icon.name">
-          <template v-slot:activator="{ props }">
-            <v-btn class="mx-8 icono" icon v-bind="props" @click="goToView(icon.route)">
-              <v-icon size="24px" color="#9C75D1">
-                {{ icon.icon }}
-              </v-icon>
-            </v-btn>
-          </template>
-          <span>{{ icon.name }}</span>
-        </v-tooltip>
-      </v-footer>
+<NavMenu/>
     </v-card>
   </v-app>
 </template>
@@ -48,12 +36,7 @@ export default {
     return {
       nombre: '',
       loading: false,
-      icons: [
-        { icon: 'mdi-playlist-plus', name: 'Crear Playlist', route: '/crear-playlist' },
-        { icon: 'mdi-harddisk', name: 'Crear Género', route: '/crear-genero' },
-        { icon: 'mdi-account', name: 'Crear Autor', route: '/crear-autor' },
-        { icon: 'mdi-package-up', name: 'Crear Canción', route: '/crear-cancion' },
-      ],
+     
     };
   },
   methods: {

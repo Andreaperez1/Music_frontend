@@ -9,23 +9,34 @@
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         <v-card-text>
-          <v-text-field :loading="loading" append-inner-icon="mdi-magnify" density="compact"
-            label="Buscar..." variant="solo" hide-details single-line @click:append-inner="onClick"></v-text-field>
+          <v-text-field :loading="loading" append-inner-icon="mdi-magnify" density="compact" label="Buscar..."
+            variant="solo" hide-details single-line @click:append-inner="onClick"></v-text-field>
         </v-card-text>
       </v-toolbar>
 
-      <v-container class="mt-12"> 
+      <v-container class="mt-12">
         <v-row>
           <v-col cols="12">
             <v-form @submit.prevent="submitForm">
               <v-text-field v-model="nombre" label="Nombre de la playlist" required></v-text-field>
               <v-textarea v-model="descripcion" label="Descripción"></v-textarea>
               <h3>Agregar Canciones</h3>
-              <v-select v-model="cancion" :items="canciones" label="Canción" item-text="titulo" item-value="id"
-                chips dense multiple></v-select>
-              <v-btn @click="agregarCancion" color="primary">Agregar</v-btn>
+              <v-select v-model="cancion" :items="canciones" label="Canción" item-text="titulo" item-value="id" chips
+                dense multiple></v-select>
 
-              <v-list dense>
+              <v-row justify="center" class="mt-4">
+                <v-tooltip v-model="show" location="top">
+                  <template v-slot:activator="{ props }">
+                    <v-btn color="white" icon="mdi mdi-plus-circle" variant="outlined" v-bind="props" @click="agregarCancion">
+                    </v-btn>
+                  </template>
+                  <span>Agregar Cancion</span>
+                </v-tooltip>
+              </v-row>
+
+
+              
+              <v-list dense class="mt-8">
                 <v-list-item v-for="(item, index) in playlist" :key="index">
                   <v-list-item-content>
                     <v-list-item-title>{{ item.titulo }}</v-list-item-title>
@@ -34,33 +45,24 @@
                 </v-list-item>
               </v-list>
 
-              <v-btn type="submit" color="primary" class="mx-auto d-block">Guardar</v-btn>
+              <v-btn type="submit" color="primary" class=" mt-8 mx-auto d-block">Guardar</v-btn>
             </v-form>
           </v-col>
         </v-row>
       </v-container>
 
-      <v-footer class="card" padless>
-        <v-tooltip class="custom-tooltip" location="top" v-for="icon in icons" :key="icon.name">
-          <template v-slot:activator="{ props }">
-            <v-btn class="mx-8 icono" icon v-bind="props" @click="goToView(icon.route)">
-              <v-icon size="24px" color="#9C75D1">
-                {{ icon.icon }}
-              </v-icon>
-            </v-btn>
-          </template>
-          <span>{{ icon.name }}</span>
-        </v-tooltip>
-      </v-footer>
+      <NavMenu />
     </v-card>
   </v-app>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'CrearPlaylist',
   data() {
     return {
+      show: false,
       nombre: '',
       descripcion: '',
       cancion: null,
@@ -73,12 +75,7 @@ export default {
       ],
       playlist: [],
       loading: false,
-      icons: [
-        { icon: 'mdi-playlist-plus', name: 'Crear Playlist', route: '/crear-playlist' },
-        { icon: 'mdi-harddisk', name: 'Crear Género', route: '/crear-genero' },
-        { icon: 'mdi-account', name: 'Crear Autor', route: '/crear-autor' },
-        { icon: 'mdi-package-up', name: 'Crear Canción', route: '/crear-cancion' },
-      ],
+
     };
   },
   methods: {
@@ -140,7 +137,8 @@ export default {
   font-optical-sizing: auto;
   color: aliceblue;
   font-weight: bold;
-  margin-top: 30px; /* Ajuste para centrar verticalmente el título */
+  margin-top: 30px;
+  /* Ajuste para centrar verticalmente el título */
 }
 
 .custom-tooltip .v-tooltip__content {

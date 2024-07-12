@@ -1,5 +1,5 @@
 // src/router.js
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import HelloWorld from './components/HelloWorld.vue';
 import CrearCancion from './components/CrearCancion.vue';
 import CrearPlaylist from './components/CrearPlaylist.vue';
@@ -7,15 +7,15 @@ import CrearAutor from './components/CrearAutor.vue';
 import CrearGenero from './components/CrearGenero.vue';
 
 const routes = [
-  { path: '/', component: HelloWorld },
-  { path: '/crear-cancion', component: CrearCancion },
-  { path: '/crear-playlist', component: CrearPlaylist},
-  { path: '/crear-autor', component: CrearAutor },
-  { path: '/crear-gene', component: CrearGenero },
+  { path: '/', name:'1', component: HelloWorld },
+  { path: '/crear-cancion', name:'2', component: CrearCancion},
+  { path: '/crear-playlist', name:'3', component: CrearPlaylist},
+  { path: '/crear-autor',name:'4', component: CrearAutor },
+  { path: '/crear-genero',name:'4+1', component: CrearGenero },
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
 });
 
