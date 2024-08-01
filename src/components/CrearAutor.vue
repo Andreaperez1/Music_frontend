@@ -9,7 +9,7 @@
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         <v-card-text>
-          <v-text-field :loading="loading" append-inner-icon="mdi-magnify" density="compact" label="Buscar "
+          <v-text-field :loading="loading" append-inner-icon="mdi-magnify" density="compact" label="Buscar"
             variant="solo" hide-details single-line @click:append-inner="onClick"></v-text-field>
         </v-card-text>
       </v-toolbar>
@@ -17,13 +17,49 @@
       <v-container class="mt-12">
         <v-row>
           <v-col cols="12">
-            <v-form @submit.prevent="submitForm">
-              <v-text-field v-model="nombre" label="Nombre del autor" required></v-text-field>
-              <v-text-field v-model="pais" label="País"></v-text-field>
-              <v-btn type="submit" color="primary" class="mx-auto d-block">Guardar</v-btn>
+            <v-form ref="formAutor" v-model="validaAutor" lazy-validation>
+              <v-text-field v-model="paqueteAu.nombre" :rules="campoRules" label="Nombre del Autor" placeholder="Ej: Adele" required></v-text-field>
+              <v-text-field v-model="paqueteAu.pais" :rules="campoRules" label="Pais del Autor" placeholder="Ej: USA" required></v-text-field>
+              <v-card-actions class="justify-center">
+                <v-btn @click="guardarAutor()" class="btn-tabla">
+                  {{ editing ? 'Modificar' : 'Guardar' }}
+                </v-btn>
+              </v-card-actions>
             </v-form>
           </v-col>
         </v-row>
+        
+        <v-row>
+          <v-col cols="12">
+            <v-toolbar flat>
+              <v-toolbar-title class="center-title">Lista de Autores</v-toolbar-title>
+            </v-toolbar>
+            <v-data-table :headers="headers" :items="autores" class="elevation-1">
+              <template v-slot:top>
+                <v-row class="headers-row">
+                  <v-col class="header-col">Nombre</v-col>
+                  <v-col class="header-col">País</v-col>
+                  <v-col class="header-col">Acciones</v-col>
+                </v-row>
+              </template>
+              <template v-slot:item="{ item }">
+                <tr class="data-row">
+                  <td class="data-cell">{{ item.nombre }}</td>
+                  <td class="data-cell">{{ item.pais }}</td>
+                  <td class="data-cell">
+                    <v-btn small @click="editAutor(item)" class="mx-2">
+                      <v-icon>mdi-pencil</v-icon>
+                    </v-btn>
+                    <v-btn small @click="deleteAutor(item.id)" class="mx-2">
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </td>
+                </tr>
+              </template>
+            </v-data-table>
+          </v-col>
+        </v-row>
+
       </v-container>
 
       <NavMenu />
@@ -32,24 +68,99 @@
 </template>
 
 <script>
+import axios from 'axios';
+import Swal from 'sweetalert2';
+
 export default {
   name: 'CrearAutor',
   data() {
     return {
-      nombre: '',
-      pais: '',
+      paqueteAu: {
+        nombre: '',
+        pais: ''
+      },
+      autores: [],
       loading: false,
-
+      validaAutor: false,
+      editing: false, // Estado para editar
+      currentId: null, // ID del autor que se está editando
+      campoRules: [(v) => !!v || 'Este campo es requerido'],
+      headers: [
+        { text: 'Nombre', value: 'nombre', align: 'start' },
+        { text: 'País', value: 'pais', align: 'start' },
+        { text: 'Acciones', value: 'actions', align: 'end' },
+      ],
     };
   },
   methods: {
-    submitForm() {
-      const data = {
-        nombre: this.nombre,
-        pais: this.pais,
-      };
-      console.log('Formulario enviado:', data);
-      // Aquí iría la lógica para enviar el formulario a un backend o similar
+    async guardarAutor() {
+      try {
+        if (this.editing) {
+          // Si estamos editando, actualizar el autor
+          await axios.put(`${process.env.VUE_APP_API_BASE_URL}/autores/${this.currentId}`, this.paqueteAu);
+          Swal.fire({
+            title: 'Éxito!',
+            text: 'Autor modificado con éxito',
+            icon: 'success',
+            confirmButtonText: 'Aceptar',
+          });
+          this.editing = false; // Cambiar el estado a no editar
+        } else {
+          // Si estamos creando, guardar un nuevo autor
+          await axios.post(`${process.env.VUE_APP_API_BASE_URL}/autores`, this.paqueteAu);
+          Swal.fire({
+            title: 'Éxito!',
+            text: 'Autor guardado con éxito',
+            icon: 'success',
+            confirmButtonText: 'Aceptar',
+          });
+        }
+        this.paqueteAu.nombre = '';
+        this.paqueteAu.pais = '';
+        this.obtenerAutores();
+      } catch (error) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Error al guardar el autor',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+        console.error('Error al guardar el autor:', error.response ? error.response.data : error.message);
+      }
+    },
+    async obtenerAutores() {
+      try {
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/autores`);
+        this.autores = response.data;
+      } catch (error) {
+        console.error('Error al obtener los autores:', error.response ? error.response.data : error.message);
+      }
+    },
+    async editAutor(item) {
+      // Preparar el formulario para la edición
+      this.paqueteAu = { ...item };
+      this.currentId = item.id;
+      this.editing = true; // Cambiar el estado a editar
+    },
+    async deleteAutor(id) {
+      try {
+        await axios.delete(`${process.env.VUE_APP_API_BASE_URL}/autores/${id}`);
+        Swal.fire({
+          title: 'Éxito!',
+          text: 'Autor eliminado con éxito',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+        });
+        this.obtenerAutores();
+      } catch (error) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Error al eliminar el autor',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+        console.error('Error al eliminar el autor:', error.response ? error.response.data : error.message);
+      }
     },
     goBack() {
       this.$router.back();
@@ -60,9 +171,9 @@ export default {
         this.loading = false;
       }, 2000);
     },
-    goToView(route) {
-      this.$router.push(route); // Navega a la ruta especificada usando Vue Router
-    },
+  },
+  mounted() {
+    this.obtenerAutores();
   },
 };
 </script>
@@ -88,10 +199,39 @@ export default {
   color: aliceblue;
   font-weight: bold;
   margin-top: 30px;
-  /* Ajuste para centrar verticalmente el título */
 }
 
 .custom-tooltip .v-tooltip__content {
   background-color: rgb(62, 223, 196) !important;
+}
+
+.center-title {
+  text-align: center;
+}
+
+.headers-row {
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.header-col {
+  flex: 1;
+  text-align: center;
+  padding: 8px;
+}
+
+.data-row {
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0; /* Opcional: agregar borde inferior para separación de filas */
+}
+
+.data-cell {
+  padding: 8px; /* Ajustar el relleno si es necesario */
+}
+
+.v-btn {
+  min-width: 0; /* Ajusta el ancho mínimo de los botones */
 }
 </style>
