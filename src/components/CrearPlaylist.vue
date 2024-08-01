@@ -57,6 +57,10 @@
 </template>
 
 <script>
+<<<<<<< HEAD
+=======
+
+>>>>>>> b13545f590fe8b33636b5ce2f61d15a6e7b1974c
 export default {
   name: 'CrearPlaylist',
   data() {

@@ -18,6 +18,7 @@
         <v-row>
           <v-col cols="12">
             <v-form ref="formAutor" v-model="validaAutor" lazy-validation>
+<<<<<<< HEAD
               <v-text-field v-model="paqueteAu.nombre" :rules="campoRules" label="Nombre del Autor" placeholder="Ej: Adele" required></v-text-field>
               <v-text-field v-model="paqueteAu.pais" :rules="campoRules" label="Pais del Autor" placeholder="Ej: USA" required></v-text-field>
               <v-card-actions class="justify-center">
@@ -60,6 +61,57 @@
           </v-col>
         </v-row>
 
+=======
+              <v-text-field v-model="paqueteAu.nombre" :rules="campoRules" label="Nombre del Autor"
+                placeholder="Ej: Adele" required></v-text-field>
+                <v-text-field v-model="paqueteAu.pais" :rules="campoRules" label="Pais del Autor"
+                placeholder="Ej: Adele" required></v-text-field>
+
+                <v-card-actions class="justify-center">
+                    <v-btn @click="guardarAutor()" class="btn-tabla">Guardar</v-btn>
+                </v-card-actions>
+            </v-form>
+          </v-col>
+        </v-row>
+         <v-row class="mt-3" justify="center">
+            <v-col cols="6">
+                <v-card>
+                    <v-card-title primary-title>
+                        <div>
+                            <h3 class="headline mb-0"> Autores </h3>
+                        </div>
+                    </v-card-title>
+                    <v-card-text>
+
+                        <v-data-table
+                            :headers="headersAutor"
+                            :items="itemsAutor"
+                            :loading="loadTablaAutor"
+                            loading-text="Cargando, por favor
+                           espere..."
+                            :footer-props="{
+                                'show-current-page': true,
+                                'items-per-page-options': [5, 10, 15],
+                                itemsPerPageText: 'Registros mostrados',
+                                pageText: '{0}-{1} de {2}',
+                                showFirstLastPage: true,
+                                firstIcon: 'mdi-arrow-collapse-left',
+                                lastIcon: 'mdi-arrow-collapse-right',
+                                prevIcon: 'mdi-minus',
+                                nextIcon: 'mdi-plus'
+                            }"
+                            class="elevation-1">
+                            <template >
+                                <p class="text-dark">Sin datos</p>
+                                <v-btn color="var(--c-orange)" class="mb-2 btn-tabla" @click="obtenerAutores">Recargar</v-btn>
+                            </template>
+                        </v-data-table>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+           
+        </v-row>
+>>>>>>> b13545f590fe8b33636b5ce2f61d15a6e7b1974c
       </v-container>
 
       <NavMenu />
@@ -68,6 +120,7 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
@@ -160,6 +213,69 @@ export default {
           confirmButtonText: 'Aceptar',
         });
         console.error('Error al eliminar el autor:', error.response ? error.response.data : error.message);
+=======
+import axios from 'axios'
+
+
+
+export default {
+
+  data: () => ({
+       rutaBackend: `${process.env.VUE_APP_API}`,
+  
+      valid: true,
+      validaAutor: true,
+      validEditar: true,
+      campoRules: [
+        (v) => !!v || "Campo requerido",
+      ],
+      paqueteAu:{
+        nombre: null,
+        pais: null
+      },
+       headersAutor: [
+            { text: 'Nombre Autor ', value: 'nombre', align: 'center' },
+            { text: 'Pais', value: 'pais', align: 'center' },
+        ],
+        itemsAutor:[],
+        dialogMsj: false,
+        detalleMsj: {
+            classTitle: 'error',
+            title: null,
+            body: null
+        },
+        loadTablaAutor: false,
+      loading: false, 
+  }),
+  
+  methods: {
+    async guardarAutor() {
+      if (this.$refs.formAutor.validate()) {
+        this.$emit('loadingManager', 'Creando Autor...');
+        try {
+          await axios.post(`/autor/crear`, this.paqueteAu);
+         
+          this.$refs.formAutor.reset();
+        } catch (error) {
+          this.detalleMsj.title = "Guardar Autor";
+          this.detalleMsj.body = "No se pudo guardar Autor, contacta con soporte";
+          this.dialogMsj = true;
+          console.log(`Error creando tipo: ${error}`);
+        } finally {
+          this.$emit('loadingManager');
+        }
+      }
+    },
+     async obtenerAutores() {
+      this.loadTablaAutor = true;
+      try {
+        const response = await axios.get(`/autor`);
+        this.itemsAutor = response.data;
+      } catch (error) {
+        console.log(`Error obteniendo autores: ${error}`);
+      } finally {
+        this.loadTablaAutor = false;
+>>>>>>> b13545f590fe8b33636b5ce2f61d15a6e7b1974c
       }
     },
     goBack() {
