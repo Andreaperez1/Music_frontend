@@ -7,11 +7,11 @@ import CrearAutor from './components/CrearAutor.vue';
 import CrearGenero from './components/CrearGenero.vue';
 
 const routes = [
-  { path: '/', name:'1', component: HelloWorld },
-  { path: '/crear-cancion', name:'2', component: CrearCancion},
-  { path: '/crear-playlist', name:'3', component: CrearPlaylist},
-  { path: '/crear-autor',name:'4', component: CrearAutor },
-  { path: '/crear-genero',name:'4+1', component: CrearGenero },
+  { path: '/', name:'app', component: HelloWorld },
+  { path: '/crear-cancion',  component: CrearCancion},
+  { path: '/crear-playlist',  component: CrearPlaylist},
+  { path: '/crear-autor', component: CrearAutor },
+  { path: '/crear-genero', component: CrearGenero },
 ];
 
 const router = createRouter({
