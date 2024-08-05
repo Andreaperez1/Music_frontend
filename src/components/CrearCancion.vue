@@ -19,7 +19,9 @@
                     <v-col>
                         <v-form @submit.prevent="submitForm">
                             <v-text-field v-model="titulo" label="Título de la canción" required></v-text-field>
-                            <v-file-input v-model="imagen" label="Imagen de la canción" accept="image/*"></v-file-input>
+                            <V-btn v-on:click="openWidget" id="upload_widget" class="cloudinary-button">
+                                Subir portada
+                            </V-btn>
                             <v-select v-model="autor" :items="autores" label="Autor" required
                                 @change="checkAutor"></v-select>
                             <v-text-field v-if="nuevoAutor" v-model="nuevoAutorNombre" label="Nombre del nuevo autor"
@@ -39,12 +41,14 @@
 </template>
 
 <script>
+/* eslint-disable */
 export default {
-   
     data() {
         return {
             titulo: '',
             imagen: null,
+            cloudName: "hzxyensd5",
+            uploadPreset: "aoh4fpwm",
             imagenDefault: require('@/assets/disco.jpg'),
             autores: [], // Lista de autores traída de CrearAutor.vue
             nuevoAutor: false,
@@ -53,11 +57,26 @@ export default {
             genero: '',
             generos: [], // Lista de géneros traída de CrearGenero.vue
             loading: false,
-
-        };
+            widgetUpload: null,
+            urlCloudinary: null
+        }
     },
-    methods:
-    {
+    methods: {
+        openWidget() {
+            this.widgetUpload = cloudinary.createUploadWidget(
+                {
+                    cloudName: this.cloudName,
+                    uploadPreset: this.uploadPreset,
+
+                },
+                (error, result) => {
+                    if (!error && result && result.event === "success") {
+                        console.log("Done! Here is the image info: ", result.info);
+                        this.urlCloudinary = result.info.secure_url;
+                    }
+                }
+            );
+        },
         fetchAutores() {
             this.autores = ['John Doe', 'Jane Smith', 'Mark Johnson', 'Anna Lee'];
         },

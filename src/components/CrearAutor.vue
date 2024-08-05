@@ -18,9 +18,10 @@
         <v-row>
           <v-col cols="12">
             <v-form ref="formAutor" v-model="validaAutor" lazy-validation>
-<<<<<<< HEAD
-              <v-text-field v-model="paqueteAu.nombre" :rules="campoRules" label="Nombre del Autor" placeholder="Ej: Adele" required></v-text-field>
-              <v-text-field v-model="paqueteAu.pais" :rules="campoRules" label="Pais del Autor" placeholder="Ej: USA" required></v-text-field>
+              <v-text-field v-model="paqueteAu.nombre" :rules="campoRules" label="Nombre del Autor"
+                placeholder="Ej: Adele" required></v-text-field>
+              <v-text-field v-model="paqueteAu.pais" :rules="campoRules" label="Pais del Autor" placeholder="Ej: USA"
+                required></v-text-field>
               <v-card-actions class="justify-center">
                 <v-btn @click="guardarAutor()" class="btn-tabla">
                   {{ editing ? 'Modificar' : 'Guardar' }}
@@ -29,25 +30,19 @@
             </v-form>
           </v-col>
         </v-row>
-        
+
         <v-row>
-          <v-col cols="12">
-            <v-toolbar flat>
+          <v-col cols="12"  class="table">
+            <v-toolbar flat >
               <v-toolbar-title class="center-title">Lista de Autores</v-toolbar-title>
             </v-toolbar>
             <v-data-table :headers="headers" :items="autores" class="elevation-1">
-              <template v-slot:top>
-                <v-row class="headers-row">
-                  <v-col class="header-col">Nombre</v-col>
-                  <v-col class="header-col">País</v-col>
-                  <v-col class="header-col">Acciones</v-col>
-                </v-row>
-              </template>
+            
               <template v-slot:item="{ item }">
-                <tr class="data-row">
-                  <td class="data-cell">{{ item.nombre }}</td>
-                  <td class="data-cell">{{ item.pais }}</td>
-                  <td class="data-cell">
+                <tr class="data-row-1 item">
+                  <td class="data-cell-1">{{ item.nombre }}</td>
+                  <td class="data-cell-1">{{ item.pais }}</td>
+                  <td class="data-cell-1">
                     <v-btn small @click="editAutor(item)" class="mx-2">
                       <v-icon>mdi-pencil</v-icon>
                     </v-btn>
@@ -61,66 +56,15 @@
           </v-col>
         </v-row>
 
-=======
-              <v-text-field v-model="paqueteAu.nombre" :rules="campoRules" label="Nombre del Autor"
-                placeholder="Ej: Adele" required></v-text-field>
-                <v-text-field v-model="paqueteAu.pais" :rules="campoRules" label="Pais del Autor"
-                placeholder="Ej: Adele" required></v-text-field>
 
-                <v-card-actions class="justify-center">
-                    <v-btn @click="guardarAutor()" class="btn-tabla">Guardar</v-btn>
-                </v-card-actions>
-            </v-form>
-          </v-col>
-        </v-row>
-         <v-row class="mt-3" justify="center">
-            <v-col cols="6">
-                <v-card>
-                    <v-card-title primary-title>
-                        <div>
-                            <h3 class="headline mb-0"> Autores </h3>
-                        </div>
-                    </v-card-title>
-                    <v-card-text>
-
-                        <v-data-table
-                            :headers="headersAutor"
-                            :items="itemsAutor"
-                            :loading="loadTablaAutor"
-                            loading-text="Cargando, por favor
-                           espere..."
-                            :footer-props="{
-                                'show-current-page': true,
-                                'items-per-page-options': [5, 10, 15],
-                                itemsPerPageText: 'Registros mostrados',
-                                pageText: '{0}-{1} de {2}',
-                                showFirstLastPage: true,
-                                firstIcon: 'mdi-arrow-collapse-left',
-                                lastIcon: 'mdi-arrow-collapse-right',
-                                prevIcon: 'mdi-minus',
-                                nextIcon: 'mdi-plus'
-                            }"
-                            class="elevation-1">
-                            <template >
-                                <p class="text-dark">Sin datos</p>
-                                <v-btn color="var(--c-orange)" class="mb-2 btn-tabla" @click="obtenerAutores">Recargar</v-btn>
-                            </template>
-                        </v-data-table>
-                    </v-card-text>
-                </v-card>
-            </v-col>
-           
-        </v-row>
->>>>>>> b13545f590fe8b33636b5ce2f61d15a6e7b1974c
       </v-container>
-
       <NavMenu />
     </v-card>
+    
   </v-app>
 </template>
 
 <script>
-<<<<<<< HEAD
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
@@ -139,9 +83,9 @@ export default {
       currentId: null, // ID del autor que se está editando
       campoRules: [(v) => !!v || 'Este campo es requerido'],
       headers: [
-        { text: 'Nombre', value: 'nombre', align: 'start' },
-        { text: 'País', value: 'pais', align: 'start' },
-        { text: 'Acciones', value: 'actions', align: 'end' },
+        { title: 'Nombre', value: 'nombre' },
+        { title: 'País', value: 'pais' },
+        { title: 'Acciones', value: 'actions' },
       ],
     };
   },
@@ -150,7 +94,7 @@ export default {
       try {
         if (this.editing) {
           // Si estamos editando, actualizar el autor
-          await axios.put(`${process.env.VUE_APP_API_BASE_URL}/autores/${this.currentId}`, this.paqueteAu);
+          await axios.put(`${process.env.VUE_APP_API_BASE_URL}/autores/`, this.paqueteAu);
           Swal.fire({
             title: 'Éxito!',
             text: 'Autor modificado con éxito',
@@ -213,69 +157,6 @@ export default {
           confirmButtonText: 'Aceptar',
         });
         console.error('Error al eliminar el autor:', error.response ? error.response.data : error.message);
-=======
-import axios from 'axios'
-
-
-
-export default {
-
-  data: () => ({
-       rutaBackend: `${process.env.VUE_APP_API}`,
-  
-      valid: true,
-      validaAutor: true,
-      validEditar: true,
-      campoRules: [
-        (v) => !!v || "Campo requerido",
-      ],
-      paqueteAu:{
-        nombre: null,
-        pais: null
-      },
-       headersAutor: [
-            { text: 'Nombre Autor ', value: 'nombre', align: 'center' },
-            { text: 'Pais', value: 'pais', align: 'center' },
-        ],
-        itemsAutor:[],
-        dialogMsj: false,
-        detalleMsj: {
-            classTitle: 'error',
-            title: null,
-            body: null
-        },
-        loadTablaAutor: false,
-      loading: false, 
-  }),
-  
-  methods: {
-    async guardarAutor() {
-      if (this.$refs.formAutor.validate()) {
-        this.$emit('loadingManager', 'Creando Autor...');
-        try {
-          await axios.post(`/autor/crear`, this.paqueteAu);
-         
-          this.$refs.formAutor.reset();
-        } catch (error) {
-          this.detalleMsj.title = "Guardar Autor";
-          this.detalleMsj.body = "No se pudo guardar Autor, contacta con soporte";
-          this.dialogMsj = true;
-          console.log(`Error creando tipo: ${error}`);
-        } finally {
-          this.$emit('loadingManager');
-        }
-      }
-    },
-     async obtenerAutores() {
-      this.loadTablaAutor = true;
-      try {
-        const response = await axios.get(`/autor`);
-        this.itemsAutor = response.data;
-      } catch (error) {
-        console.log(`Error obteniendo autores: ${error}`);
-      } finally {
-        this.loadTablaAutor = false;
->>>>>>> b13545f590fe8b33636b5ce2f61d15a6e7b1974c
       }
     },
     goBack() {
@@ -340,14 +221,25 @@ export default {
 
 .data-row {
   text-align: center;
-  border-bottom: 1px solid #e0e0e0; /* Opcional: agregar borde inferior para separación de filas */
+  border-bottom: 1px solid #e0e0e0;
+  /* Opcional: agregar borde inferior para separación de filas */
 }
 
 .data-cell {
-  padding: 8px; /* Ajustar el relleno si es necesario */
+  width: 33.33%;
+
+  /* Ajustar el relleno si es necesario */
 }
 
 .v-btn {
-  min-width: 0; /* Ajusta el ancho mínimo de los botones */
+  min-width: 0;
+  /* Ajusta el ancho mínimo de los botones */
+}
+
+.center-title {
+  margin-top: 10px;
+}
+.table{
+  color: aqua;
 }
 </style>
