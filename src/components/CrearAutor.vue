@@ -22,6 +22,9 @@
                 placeholder="Ej: Adele" required></v-text-field>
               <v-text-field v-model="paqueteAu.pais" :rules="campoRules" label="Pais del Autor" placeholder="Ej: USA"
                 required></v-text-field>
+                <v-select v-model="paqueteAu.genero[0].id" :items="generos" item-value="id" item-title="nombre"
+                                label="Genero" required>
+                            </v-select>
               <v-card-actions class="justify-center">
                 <v-btn @click="guardarAutor()" class="btn-tabla">
                   {{ editing ? 'Modificar' : 'Guardar' }}
@@ -32,17 +35,19 @@
         </v-row>
 
         <v-row>
-          <v-col cols="12"  class="table">
-            <v-toolbar flat >
+          <v-col cols="12"  >
+            <v-toolbar flat class="titulo" >
               <v-toolbar-title class="center-title">Lista de Autores</v-toolbar-title>
             </v-toolbar>
-            <v-data-table :headers="headers" :items="autores" class="elevation-1">
+            <v-data-table :headers="headers" :items="autores" class="table">
             
               <template v-slot:item="{ item }">
                 <tr class="data-row-1 item">
-                  <td class="data-cell-1">{{ item.nombre }}</td>
-                  <td class="data-cell-1">{{ item.pais }}</td>
-                  <td class="data-cell-1">
+                  <td class="data">{{ item.nombre }}</td>
+                  <td class="data">{{ item.pais }}</td>
+                  <td class="data">{{ item.generos }}</td>
+                  
+                  <td class="data">
                     <v-btn small @click="editAutor(item)" class="mx-2">
                       <v-icon>mdi-pencil</v-icon>
                     </v-btn>
@@ -73,10 +78,12 @@ export default {
   data() {
     return {
       paqueteAu: {
-        nombre: '',
-        pais: ''
+        nombre: null,
+        pais: null ,
+        genero:[{id:null}],
       },
       autores: [],
+      generos:[],
       loading: false,
       validaAutor: false,
       editing: false, // Estado para editar
@@ -85,6 +92,7 @@ export default {
       headers: [
         { title: 'Nombre', value: 'nombre' },
         { title: 'País', value: 'pais' },
+        { title: 'Genero', value: 'genero.nombre' },
         { title: 'Acciones', value: 'actions' },
       ],
     };
@@ -133,6 +141,7 @@ export default {
         console.error('Error al obtener los autores:', error.response ? error.response.data : error.message);
       }
     },
+
     async editAutor(item) {
       // Preparar el formulario para la edición
       this.paqueteAu = { ...item };
@@ -159,6 +168,14 @@ export default {
         console.error('Error al eliminar el autor:', error.response ? error.response.data : error.message);
       }
     },
+    async obtenerGeneros() {
+      try {
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/generos`);
+        this.generos = response.data;
+      } catch (error) {
+        console.error('Error al obtener los géneros:', error.response ? error.response.data : error.message);
+      }
+    },
     goBack() {
       this.$router.back();
     },
@@ -170,7 +187,9 @@ export default {
     },
   },
   mounted() {
+    this.obtenerGeneros();
     this.obtenerAutores();
+    
   },
 };
 </script>
@@ -197,6 +216,14 @@ export default {
   font-weight: bold;
   margin-top: 30px;
 }
+.titulo{
+  background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(137, 41, 184, 1) 100%);
+  color: aliceblue;
+  font-size: 200px;
+  font-family: "Noto Serif", serif;
+  font-weight: bold;
+  margin-top: 30px;
+}
 
 .custom-tooltip .v-tooltip__content {
   background-color: rgb(62, 223, 196) !important;
@@ -212,6 +239,9 @@ export default {
   font-weight: bold;
   margin-bottom: 0;
 }
+.data{
+  width: 30px;
+}
 
 .header-col {
   flex: 1;
@@ -221,15 +251,11 @@ export default {
 
 .data-row {
   text-align: center;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #c33cac;
   /* Opcional: agregar borde inferior para separación de filas */
 }
 
-.data-cell {
-  width: 33.33%;
 
-  /* Ajustar el relleno si es necesario */
-}
 
 .v-btn {
   min-width: 0;
@@ -240,6 +266,8 @@ export default {
   margin-top: 10px;
 }
 .table{
-  color: aqua;
+  color:#0a0409;
+  background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(137, 41, 184, 1) 100%);
 }
+
 </style>

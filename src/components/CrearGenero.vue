@@ -31,17 +31,8 @@
             <v-toolbar flat>
               <v-toolbar-title class="center-title">Lista de Géneros</v-toolbar-title>
             </v-toolbar>
-            <v-data-table :headers="headers" :items="generos" class="elevation-1">
-              <template v-slot:top>
-                <v-row class="headers-row">
-                  <v-col class="header-col">
-                    Nombre
-                  </v-col>
-                  <v-col class="header-col">
-                    Acciones
-                  </v-col>
-                </v-row>
-              </template>
+            <v-data-table :headers="headers" :items="generos" class="table">
+              
               <template v-slot:item="{ item }">
                 <tr class="data-row">
                   <td class="data-cell">{{ item.nombre }}</td>
@@ -75,15 +66,16 @@ export default {
   data() {
     return {
       paqueteGe: {
-        nombre: ''
+        nombre: null,
       },
       generos: [],
       loading: false,
       validaGenero: false,
       campoRules: [(v) => !!v || 'Este campo es requerido'],
+
       headers: [
-        { text: 'Nombre', value: 'nombre', align: 'start' },
-        { text: 'Acciones', value: 'actions', align: 'end' },
+        { title: 'Nombre', value: 'nombre', align: 'center' },
+        { title: 'Acciones', value: 'actions', align: 'center' },
       ],
       editMode: false,
       editId: null
@@ -231,4 +223,17 @@ export default {
 .v-btn {
   min-width: 0; /* Ajusta el ancho mínimo de los botones */
 }
+.table{
+  color:#0a0409;
+  background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(137, 41, 184, 1) 100%);
+}
+.titulo{
+  background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(137, 41, 184, 1) 100%);
+  color: aliceblue;
+  font-size: 200px;
+  font-family: "Noto Serif", serif;
+  font-weight: bold;
+  margin-top: 30px;
+}
+
 </style>
