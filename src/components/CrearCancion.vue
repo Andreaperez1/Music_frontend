@@ -17,7 +17,7 @@
             <v-container class="mt-12">
                 <v-row>
                     <v-col>
-                        <v-form>
+                        <v-form ref="formCancion">
                             <v-text-field v-model="paqueteCancion.nombre" label="Nombrede la canción"
                                 required></v-text-field>
                             <v-select v-model="paqueteCancion.autor" :items="autores" item-value="id"
@@ -27,12 +27,14 @@
                             <v-select v-model="paqueteCancion.genero" :items="generos" item-value="id"
                                 item-title="nombre" label="Genero" required></v-select>
 
-                            <v-text-field v-model="paqueteCancion.anio" label="Año de la canción" type="number"
-                                required>
+                            <v-text-field v-model="paqueteCancion.ano" label="Año de la canción" type="number" required>
                             </v-text-field>
+
                             <v-btn v-on:click="openWidget" id="upload_widget"
-                                class="cloudinary-button d-flex justify-center align-center" icon text>
-                                <v-icon>mdi-cloud-upload</v-icon>
+                            class="cloudinary-button d-flex justify-center align-center" 
+                             append-icon="mdi-cloud-upload" 
+                            >
+                        Subir Portada  
                             </v-btn>
 
                             <v-btn color="primary" class="mx-auto d-block" @click="guardarCancion">Guardar</v-btn>
@@ -58,8 +60,8 @@ export default {
                 nombre: null,
                 portada: null,
                 ano: null,
-                autor: null,
-                genero: null,
+                autor: [],
+                genero: [],
 
             },
 
@@ -72,6 +74,7 @@ export default {
             anio: '',
             generos: [],
             loading: false,
+            editMode:false,
             widgetUpload: null,
             urlCloudinary: null
         };
@@ -81,33 +84,33 @@ export default {
         async guardarCancion() {
             try {
                 if (this.editMode) {
-                    await axios.patch(`${process.env.VUE_APP_API_BASE_URL}/cancion/crear/${this.editId}`, this.paquetecancion);
+                    await axios.patch(`${process.env.VUE_APP_API_BASE_URL}/cancion/crear/${this.editId}`, this.paqueteCancion);
                     Swal.fire({
                         title: 'Éxito!',
-                        text: 'Género actualizado con éxito',
+                        text: 'Cancion actualizado con éxito',
                         icon: 'success',
                         confirmButtonText: 'Aceptar',
                     });
                 } else {
                     console.log(this.paqueteCancion)
-                    await axios.post(`${process.env.VUE_APP_API_BASE_URL}/cancion/crear`, this.paquetecancion);
+                    await axios.post(`${process.env.VUE_APP_API_BASE_URL}/cancion/crear`, this.paqueteCancion);
                     Swal.fire({
                         title: 'Éxito!',
-                        text: 'Género guardado con éxito',
+                        text: 'Cancion guardado con éxito',
                         icon: 'success',
                         confirmButtonText: 'Aceptar',
                     });
                 }
-                this.resetForm();
+                this.$refs.formCancion.reset();
 
             } catch (error) {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'Error al guardar el género',
+                    text: 'Error al guardar el Cancion',
                     icon: 'error',
                     confirmButtonText: 'Aceptar',
                 });
-                console.error('Error al guardar el género:', error.response ? error.response.data : error.message);
+                console.error('Error al guardar el Cancion:', error.response ? error.response.data : error.message);
             }
         },
         openWidget() {
@@ -163,17 +166,7 @@ export default {
                 this.loading = false;
             }, 2000);
         },
-        submitForm() {
-            const data = {
-                nombre: this.titulo,
-                portada: this.imagen || this.imagenDefault,
-                autor: this.nuevoAutor ? this.nuevoAutorNombre : this.autor,
-                anio: this.anio,
-                genero: this.genero,
-            };
-            console.log('Formulario enviado:', data);
-            // Aquí iría la lógica para enviar el formulario a un backend o similar
-        },
+      
     },
     created() {
         this.obtenerGeneros();
