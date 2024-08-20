@@ -28,7 +28,7 @@
         
         <v-row>
           <v-col cols="12">
-            <v-toolbar flat>
+            <v-toolbar flat class="titulo" >
               <v-toolbar-title class="center-title">Lista de Géneros</v-toolbar-title>
             </v-toolbar>
             <v-data-table :headers="headers" :items="generos" class="table">
@@ -236,4 +236,13 @@ export default {
   margin-top: 30px;
 }
 
+.btn-tabla {
+  background-color: purple;
+  color: aliceblue;
+  font-weight: bold;
+  margin-top: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-bottom: 20px;
+}
 </style>
